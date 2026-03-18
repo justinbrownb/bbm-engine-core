@@ -14,10 +14,17 @@
  * - Registry pattern: supports multiple pitches over time
  */
 
-import { callClaude } from '../services/writer.js';
+import Anthropic from '@anthropic-ai/sdk';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+
+// Inline Claude call (replaces dependency on writer.js callClaude)
+const _anthropic = new Anthropic();
+async function callClaude(systemPrompt, userMessage, { maxTokens = 2000, model = 'claude-haiku-4-5-20251001' } = {}) {
+  const resp = await _anthropic.messages.create({ model, max_tokens: maxTokens, system: systemPrompt, messages: [{ role: 'user', content: userMessage }] });
+  return resp.content[0]?.text || '';
+}
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = process.env.RAILWAY_VOLUME_MOUNT_PATH || path.join(__dirname, '../..');
