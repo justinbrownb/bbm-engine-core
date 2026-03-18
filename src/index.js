@@ -61,3 +61,6 @@ export { generateImageQuery, generateInlineImageQuery } from './utils/imageQuery
 
 // Health & monitoring
 export { startHealthServer, log, getRecentEvents, getHealthSummary, setStateProvider } from './utils/health.js';
+
+// Prompt service client
+export { getPrompts, getSharedPrompts, preloadPrompts, clearPromptCache, getPromptCacheStats } from './services/promptService.js';
