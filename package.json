@@ -1,0 +1,28 @@
+{
+  "name": "@bbm/engine-core",
+  "version": "1.0.0",
+  "description": "Shared utilities and base services for BBM content engines and bots",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./utils/*": "./src/utils/*",
+    "./services/*": "./src/services/*",
+    "./constants": "./src/constants.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "axios": "^1.7.9",
+    "cheerio": "^1.0.0",
+    "rss-parser": "^3.13.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/justinbrownb/bbm-engine-core.git"
+  },
+  "private": true,
+  "license": "UNLICENSED"
+}
