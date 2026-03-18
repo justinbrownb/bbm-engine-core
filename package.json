@@ -6,6 +6,9 @@
   "main": "src/index.js",
   "exports": {
     ".": "./src/index.js",
+    "./src/utils/*": "./src/utils/*",
+    "./src/services/*": "./src/services/*",
+    "./src/constants.js": "./src/constants.js",
     "./utils/*": "./src/utils/*",
     "./services/*": "./src/services/*",
     "./constants": "./src/constants.js"
