@@ -2,7 +2,7 @@
 // Uses Claude Haiku to validate article against author's full detail bank
 
 import Anthropic from '@anthropic-ai/sdk';
-import { personalDetailBanks } from '../data/personalDetails.js';
+import { getAllPersonalDetails } from '../data/personalDetailsRegistry.js';
 
 const anthropic = new Anthropic();
 
@@ -15,7 +15,7 @@ const anthropic = new Anthropic();
  * @returns {object} - { valid: boolean, issues: string[] }
  */
 export async function validateBiography(authorName, articleHtml, articleTitle) {
-  const detailBank = personalDetailBanks[authorName];
+  const detailBank = getAllPersonalDetails()[authorName];
   if (!detailBank) {
     // No detail bank = can't validate, pass through
     return { valid: true, issues: [] };

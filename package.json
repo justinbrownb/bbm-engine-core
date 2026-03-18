@@ -8,6 +8,7 @@
     ".": "./src/index.js",
     "./src/utils/*": "./src/utils/*",
     "./src/services/*": "./src/services/*",
+    "./src/data/*": "./src/data/*",
     "./src/constants.js": "./src/constants.js",
     "./utils/*": "./src/utils/*",
     "./services/*": "./src/services/*",

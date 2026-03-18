@@ -3,7 +3,7 @@
 // for targeted fixes. Max 2 rewrite attempts before blocking (Layer 3).
 
 import Anthropic from '@anthropic-ai/sdk';
-import { personalDetailBanks } from '../data/personalDetails.js';
+import { getAllPersonalDetails } from '../data/personalDetailsRegistry.js';
 
 const anthropic = new Anthropic();
 
@@ -18,7 +18,7 @@ const anthropic = new Anthropic();
  * @returns {Promise<{ html: string, fixed: boolean, fixSummary: string }>}
  */
 export async function rewriteForBioConsistency(authorName, articleHtml, articleTitle, issues) {
-  const detailBank = personalDetailBanks[authorName];
+  const detailBank = getAllPersonalDetails()[authorName];
   if (!detailBank) {
     return { html: articleHtml, fixed: false, fixSummary: 'No detail bank available' };
   }

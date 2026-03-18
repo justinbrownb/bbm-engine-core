@@ -11,6 +11,9 @@
 // Constants
 export * from './constants.js';
 
+// Personal details registry — engines register their author detail banks at startup
+export { registerPersonalDetails, getPersonalDetails, getAllPersonalDetails } from './data/personalDetailsRegistry.js';
+
 // --- Utilities ---
 
 // Article quality & rewriting

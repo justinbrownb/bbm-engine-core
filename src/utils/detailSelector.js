@@ -2,7 +2,7 @@
 // Uses Claude Haiku for fast, cheap selection from the full detail bank
 
 import Anthropic from '@anthropic-ai/sdk';
-import { personalDetailBanks } from '../data/personalDetails.js';
+import { getAllPersonalDetails } from '../data/personalDetailsRegistry.js';
 
 const anthropic = new Anthropic();
 
@@ -14,7 +14,7 @@ const anthropic = new Anthropic();
  * @returns {string|null} - Selected details as formatted string, or null if no bank found
  */
 export async function selectRelevantDetails(authorName, articleTitle, topicContext = '') {
-  const detailBank = personalDetailBanks[authorName];
+  const detailBank = getAllPersonalDetails()[authorName];
   if (!detailBank) {
     console.log(`[DetailSelector] No detail bank found for "${authorName}" — skipping`);
     return null;

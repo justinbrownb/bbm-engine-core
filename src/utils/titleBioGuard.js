@@ -3,7 +3,7 @@
 // Uses Claude Haiku for fast, cheap batch filtering
 
 import Anthropic from '@anthropic-ai/sdk';
-import { personalDetailBanks } from '../data/personalDetails.js';
+import { getAllPersonalDetails } from '../data/personalDetailsRegistry.js';
 
 const anthropic = new Anthropic();
 
@@ -43,7 +43,7 @@ function extractKeyFacts(detailBank) {
  * @returns {Promise<{ passed: string[], dropped: { title: string, reason: string }[] }>}
  */
 export async function filterTitlesByBio(authorName, titles) {
-  const detailBank = personalDetailBanks[authorName];
+  const detailBank = getAllPersonalDetails()[authorName];
   if (!detailBank) {
     // No detail bank = can't filter, pass all through
     return { passed: titles, dropped: [] };
