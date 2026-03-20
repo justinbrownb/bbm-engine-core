@@ -9,15 +9,36 @@ const anthropic = new Anthropic();
 /**
  * Validate a written article against the author's personal detail bank.
  * Checks for contradictions, fabricated biographical details, and tone inconsistencies.
- * @param {string} authorName - Full name of the author
- * @param {string} articleHtml - The written article HTML
- * @param {string} articleTitle - The article title
+ * Supports both flat and domain-keyed detail banks.
+ *
+ * @param {string} domainOrAuthor - Site domain (if 4 args) or author name (if 3 args)
+ * @param {string} authorOrHtml - Author name (if 4 args) or article HTML (if 3 args)
+ * @param {string} htmlOrTitle - Article HTML (if 4 args) or article title (if 3 args)
+ * @param {string} [maybeTitle] - Article title (only if 4 args)
  * @returns {object} - { valid: boolean, issues: string[] }
  */
-export async function validateBiography(authorName, articleHtml, articleTitle) {
-  const detailBank = getAllPersonalDetails()[authorName];
-  if (!detailBank) {
-    // No detail bank = can't validate, pass through
+export async function validateBiography(domainOrAuthor, authorOrHtml, htmlOrTitle, maybeTitle) {
+  // Support both (domain, author, html, title) and (author, html, title) signatures
+  let authorName, articleHtml, articleTitle;
+  if (maybeTitle !== undefined) {
+    // 4-arg: (domain, authorName, html, title)
+    const domain = domainOrAuthor;
+    authorName = authorOrHtml;
+    articleHtml = htmlOrTitle;
+    articleTitle = maybeTitle;
+    // Look up domain-keyed detail bank first, then flat
+    const allDetails = getAllPersonalDetails();
+    var detailBank = allDetails[domain]?.[authorName] || allDetails[authorName] || null;
+  } else {
+    // 3-arg: (authorName, html, title)
+    authorName = domainOrAuthor;
+    articleHtml = authorOrHtml;
+    articleTitle = htmlOrTitle;
+    var detailBank = getAllPersonalDetails()[authorName] || null;
+  }
+
+  if (!detailBank || typeof detailBank !== 'string') {
+    // No detail bank or got an object instead of string = can't validate, pass through
     return { valid: true, issues: [] };
   }
 

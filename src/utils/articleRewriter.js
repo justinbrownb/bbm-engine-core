@@ -10,16 +10,37 @@ const anthropic = new Anthropic();
 /**
  * Surgically rewrite sections of an article that contradict the author's biography.
  * Uses Claude Opus for high-quality, targeted edits.
+ * Supports both flat and domain-keyed detail banks.
  *
- * @param {string} authorName - Full name of the author
- * @param {string} articleHtml - The article HTML to fix
- * @param {string} articleTitle - The article title
- * @param {string[]} issues - Array of specific issues from bioValidator
+ * @param {string} domainOrAuthor - Site domain (if 5 args) or author name (if 4 args)
+ * @param {string} authorOrHtml - Author name (if 5 args) or article HTML (if 4 args)
+ * @param {string} htmlOrTitle - Article HTML (if 5 args) or article title (if 4 args)
+ * @param {string|string[]} titleOrIssues - Article title (if 5 args) or issues array (if 4 args)
+ * @param {string[]} [maybeIssues] - Issues array (only if 5 args)
  * @returns {Promise<{ html: string, fixed: boolean, fixSummary: string }>}
  */
-export async function rewriteForBioConsistency(authorName, articleHtml, articleTitle, issues) {
-  const detailBank = getAllPersonalDetails()[authorName];
-  if (!detailBank) {
+export async function rewriteForBioConsistency(domainOrAuthor, authorOrHtml, htmlOrTitle, titleOrIssues, maybeIssues) {
+  // Support both (domain, author, html, title, issues) and (author, html, title, issues) signatures
+  let authorName, articleHtml, articleTitle, issues;
+  if (maybeIssues !== undefined) {
+    // 5-arg: (domain, authorName, html, title, issues)
+    const domain = domainOrAuthor;
+    authorName = authorOrHtml;
+    articleHtml = htmlOrTitle;
+    articleTitle = titleOrIssues;
+    issues = maybeIssues;
+    const allDetails = getAllPersonalDetails();
+    var detailBank = allDetails[domain]?.[authorName] || allDetails[authorName] || null;
+  } else {
+    // 4-arg: (authorName, html, title, issues)
+    authorName = domainOrAuthor;
+    articleHtml = authorOrHtml;
+    articleTitle = htmlOrTitle;
+    issues = titleOrIssues;
+    var detailBank = getAllPersonalDetails()[authorName] || null;
+  }
+
+  if (!detailBank || typeof detailBank !== 'string') {
     return { html: articleHtml, fixed: false, fixSummary: 'No detail bank available' };
   }
 
